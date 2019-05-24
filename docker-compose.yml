@@ -1,0 +1,53 @@
+version: '3'
+services:
+  db:
+    image: mysql:latest
+    volumes:
+      - "./.data_dev:/var/lib/mysql"
+      - "./mysql_conf/default_authentication.cnf:/etc/mysql/conf.d/default_authentication.cnf"
+    ports:
+      - "${MYSQL_PORT}:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_NAME_DEV}
+
+  app: &app_base
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        NODE_VERSION: ${NODE_VERSION}
+        RUBY_VERSION: ${RUBY_VERSION}
+    tty: true
+    working_dir: /var/www
+    volumes:
+      - "./src:/var/www"
+      - "./.bundle:/usr/local/bundle"
+    restart: always
+
+  rails:
+    <<: *app_base
+    command: rails s -p 3000 -b '0.0.0.0'
+    ports:
+      - "${APP_PORT}:3000"
+    environment:
+      RAILS_ENV: development
+      MYSQL_HOST: db
+      MYSQL_PORT: ${MYSQL_PORT}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_NAME_DEV: ${MYSQL_NAME_DEV}
+      MYSQL_NAME_TEST: ${MYSQL_NAME_TEST}
+      MYSQL_NAME: ${MYSQL_NAME}
+    depends_on:
+      - db
+
+  webpacker:
+    <<: *app_base
+    command: ./bin/webpack-dev-server
+    ports:
+      - "${WEBPACKER_PORT}:3035"
+    environment:
+      RAILS_ENV: development
