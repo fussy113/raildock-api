@@ -24,7 +24,9 @@ services:
     working_dir: /var/www
     volumes:
       - "./src:/var/www"
-      - "./.bundle:/usr/local/bundle"
+      - "./.bundle"
+      - "./tmp"
+      - "./node_modules"
     restart: always
 
   rails:

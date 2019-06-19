@@ -29,3 +29,12 @@ RUN apk update && \
 RUN yarn global add npm
 
 WORKDIR /var/www
+
+ADD ./src/Gemfile ./
+ADD ./src/Gemfile.lock ./
+ADD ./src/package.json ./
+ADD ./src/yarn.lock ./
+
+
+RUN bundle install
+RUN yarn install
