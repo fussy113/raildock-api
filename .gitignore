@@ -1,6 +1,4 @@
 .env
-.bundle
-.data_dev
 .vscode
 .idea
 .DS_Store
