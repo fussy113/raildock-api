@@ -5,7 +5,6 @@ services:
       context: ./mysql
       dockerfile: Dockerfile
     volumes:
-      - "./mysql/default_authentication.cnf:/etc/mysql/conf.d/default_authentication.cnf"
       - "./mysql/dev-data:/var/lib/mysql"
     ports:
       - "3306:3306"
@@ -17,7 +16,6 @@ services:
       context: ./mysql
       dockerfile: Dockerfile
     volumes:
-      - "./mysql/default_authentication.cnf:/etc/mysql/conf.d/default_authentication.cnf"
       - "./mysql/test-data:/var/lib/mysql"
     ports:
       - "3307:3306"
@@ -30,6 +28,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - "./code:/var/www"
+      - "./bundle:/usr/local/bundle"
     ports:
       - "3000:3000"
     environment:

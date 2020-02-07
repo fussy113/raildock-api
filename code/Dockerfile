@@ -1,5 +1,5 @@
 FROM node:12.15.0-alpine3.11 as node
-FROM ruby:2.7.0-alpine3.11
+FROM ruby:2.6.5-alpine3.11
 
 ENV LANG="C.UTF-8" \
     BUILD_PACKAGES="curl-dev build-base" \
