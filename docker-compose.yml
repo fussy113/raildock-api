@@ -8,7 +8,7 @@ services:
       - "./mysql/default_authentication.cnf:/etc/mysql/conf.d/default_authentication.cnf"
       - "./mysql/dev-data:/var/lib/mysql"
     ports:
-      - "${MYSQL_PORT}:3306"
+      - "3306:3306"
     environment:
       MYSQL_DATABASE: ${MYSQL_NAME_DEV}
 
@@ -31,16 +31,15 @@ services:
     volumes:
       - "./code:/var/www"
     ports:
-      - "${APP_PORT}:3000"
+      - "3000:3000"
     environment:
       RAILS_ENV: development
-      MYSQL_HOST: ${MYSQL_HOST}
-      MYSQL_PORT: ${MYSQL_PORT}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_HOST_DEV: ${MYSQL_HOST_DEV}
+      MYSQL_HOST_TEST: ${MYSQL_HOST_TEST}
       MYSQL_NAME_DEV: ${MYSQL_NAME_DEV}
       MYSQL_NAME_TEST: ${MYSQL_NAME_TEST}
-      MYSQL_NAME: ${MYSQL_NAME}
     depends_on:
       - db
       - test-db
