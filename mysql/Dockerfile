@@ -1,0 +1,14 @@
+FROM mysql:8.0
+
+ARG MYSQL_ROOT_PASSWORD="root"
+ARG MYSQL_USER="raildock"
+ARG MYSQL_PASSWORD="password"
+ARG MYSQL_DATABASE="raildock"
+
+ENV MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD \
+    MYSQL_USER=$MYSQL_USER \
+    MYSQL_PASSWORD=$MYSQL_PASSWORD \
+    MYSQL_DATABASE=$MYSQL_DATABASE
+
+COPY ./default_authentication.cnf /etc/mysql/conf.d/default_authentication.cnf
+EXPOSE 3306
