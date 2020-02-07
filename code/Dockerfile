@@ -17,14 +17,14 @@ RUN apk update && \
     apk add --no-cache --update\
     $BUILD_PACKAGES \
     $DEV_PACKAGES \
-    $RUBY_PACKAGES && \
-    gem install bundler
+    $RUBY_PACKAGES
 
 WORKDIR /var/www
 
 COPY ./ ./
 
-RUN bundle install -j4
+RUN gem install bundler && \
+    bundle install -j4
 
 EXPOSE 3000
 
