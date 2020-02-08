@@ -1,55 +1,46 @@
 version: '3'
 services:
   db:
-    image: mysql:latest
+    build:
+      context: ./mysql
+      dockerfile: Dockerfile
     volumes:
-      - "./mysql_conf/default_authentication.cnf:/etc/mysql/conf.d/default_authentication.cnf"
-      - "data:/var/lib/mysql"
+      - "./mysql/dev-data:/var/lib/mysql"
     ports:
-      - "${MYSQL_PORT}:3306"
+      - "3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_NAME_DEV}
 
-  app: &app_base
-    image: fussy113/raildock:latest
-    tty: true
-    working_dir: /var/www
+  test-db:
+    build:
+      context: ./mysql
+      dockerfile: Dockerfile
+    volumes:
+      - "./mysql/test-data:/var/lib/mysql"
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_DATABASE: ${MYSQL_NAME_TEST}
+
+  app:
+    build:
+      context: ./code
+      dockerfile: Dockerfile
     volumes:
       - "./code:/var/www"
-      - "bundle:/usr/local/bundle"
-      - "node_modules:/var/www/node_modules"
-    command: bundle exec rails s -p 3000 -b '0.0.0.0'
+      - "./bundle:/usr/local/bundle"
     ports:
-      - "${APP_PORT}:3000"
+      - "3000:3000"
     environment:
       RAILS_ENV: development
-      MYSQL_HOST: db
-      MYSQL_PORT: ${MYSQL_PORT}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_HOST_DEV: ${MYSQL_HOST_DEV}
+      MYSQL_HOST_TEST: ${MYSQL_HOST_TEST}
       MYSQL_NAME_DEV: ${MYSQL_NAME_DEV}
       MYSQL_NAME_TEST: ${MYSQL_NAME_TEST}
-      MYSQL_NAME: ${MYSQL_NAME}
     depends_on:
       - db
+      - test-db
     tty: true
     restart: always
-
-  webpacker:
-    <<: *app_base
-    command: ./bin/webpack-dev-server
-    ports:
-      - "${WEBPACKER_PORT}:3035"
-    depends_on:
-      - app
-    tty: false
-    restart: always
-
-
-volumes:
-  bundle:
-  data:
-  node_modules:
