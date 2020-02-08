@@ -31,3 +31,7 @@ Gemを追加した場合は、下記を実行してください。
 `docker-compose run --rm app bundle install`
 
 http://localhost:3000で繋がります。
+
+## hadolint
+
+`docker run --rm -i hadolint/hadolint < code/Dockerfile`

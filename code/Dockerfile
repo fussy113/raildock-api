@@ -9,12 +9,11 @@ ENV LANG="C.UTF-8" \
 COPY --from=node /opt/yarn-* /opt/yarn
 COPY --from=node /usr/local/bin/node /usr/local/bin/
 
-RUN ln -s /opt/yarn/bin/yarn /usr/local/bin/yarn \
-    && ln -s /opt/yarn/bin/yarnpkg /usr/local/bin/yarnpkg
+RUN ln -s /opt/yarn/bin/yarn /usr/local/bin/yarn && \
+    ln -s /opt/yarn/bin/yarnpkg /usr/local/bin/yarnpkg
 
 RUN apk update && \
-    apk upgrade && \
-    apk add --no-cache --update\
+    apk add --no-cache --update \
     $BUILD_PACKAGES \
     $DEV_PACKAGES \
     $RUBY_PACKAGES
@@ -23,8 +22,8 @@ WORKDIR /var/www
 
 COPY ./ ./
 
-RUN gem install bundler && \
-    bundle install -j4
+RUN gem install bundler
+RUN bundle install -j4
 
 EXPOSE 3000
 
