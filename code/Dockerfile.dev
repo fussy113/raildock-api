@@ -1,8 +1,10 @@
 FROM node:12.15.0-alpine3.11 as node
 FROM ruby:2.6.5-alpine3.11
 
-ENV LANG="C.UTF-8"
-ENV RAILS_ENV=production
+ENV LANG="C.UTF-8" \
+    BUILD_PACKAGES="curl-dev build-base" \
+    DEV_PACKAGES="zlib-dev libxml2-dev libxslt-dev tzdata yaml-dev mariadb-dev less" \
+    RUBY_PACKAGES="ruby-json yaml"
 
 COPY --from=node /opt/yarn-* /opt/yarn
 COPY --from=node /usr/local/bin/node /usr/local/bin/
@@ -11,19 +13,17 @@ RUN ln -s /opt/yarn/bin/yarn /usr/local/bin/yarn && \
     ln -s /opt/yarn/bin/yarnpkg /usr/local/bin/yarnpkg
 
 RUN apk update && \
-    apk add --no-cache --update alpine-sdk mariadb-dev tzdata && \
-    gem install bundler
-
-WORKDIR /tmp
-
-COPY ./Gemfile ./
-COPY ./Gemfile.lock ./
-
-RUN bundle install -j4 --without test development
+    apk add --no-cache --update \
+    $BUILD_PACKAGES \
+    $DEV_PACKAGES \
+    $RUBY_PACKAGES
 
 WORKDIR /var/www
 
 COPY ./ ./
+
+RUN gem install bundler
+RUN bundle install -j4
 
 EXPOSE 3000
 

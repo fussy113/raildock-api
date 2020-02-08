@@ -3,7 +3,7 @@ services:
   db:
     build:
       context: ./mysql
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     volumes:
       - "./mysql/dev-data:/var/lib/mysql"
     ports:
