@@ -5,7 +5,7 @@
 - Docker
 - docker-compose
   - app コンテナ
-    - ruby 2.7.0
+    - ruby 2.6.5
     - Rails 6.0.2
     - node 12.15.0
   - db コンテナ
