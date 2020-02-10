@@ -23,7 +23,7 @@ cp .env.example .env
 
 docker-compose build
 docker-compose run --rm app bundle install -j4
-docker-compose run --rm app rails:db:migrate
+docker-compose run --rm app rails db:migrate
 docker-compose up -d
 ```
 
