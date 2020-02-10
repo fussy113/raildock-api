@@ -5,7 +5,7 @@ services:
       context: ./mysql
       dockerfile: Dockerfile
     volumes:
-      - "./mysql/dev-data:/var/lib/mysql"
+      - ./mysql/dev-data:/var/lib/mysql:cached
     ports:
       - "3306:3306"
     environment:
@@ -16,7 +16,7 @@ services:
       context: ./mysql
       dockerfile: Dockerfile
     volumes:
-      - "./mysql/test-data:/var/lib/mysql"
+      - ./mysql/test-data:/var/lib/mysql:cached
     ports:
       - "3307:3306"
     environment:
@@ -27,8 +27,12 @@ services:
       context: ./code
       dockerfile: Dockerfile
     volumes:
-      - "./code:/var/www"
-      - "./bundle:/usr/local/bundle"
+      - ./code:/var/www:cached
+      - ./bundle:/usr/local/bundle:cached
+      - /code/vendor
+      - /code/tmp
+      - /code/log
+
     ports:
       - "3000:3000"
     environment:
