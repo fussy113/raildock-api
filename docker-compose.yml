@@ -1,6 +1,6 @@
 version: '3'
 services:
-  db:
+  dev-db:
     build:
       context: ./mysql
       dockerfile: Dockerfile
@@ -28,11 +28,8 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./code:/var/www:cached
+      # - ./bundle:/usr/local/bundle:cached コメントアウトすると高速化する(docker詳しい人向け)
       - ./bundle:/usr/local/bundle:cached
-      - /code/vendor
-      - /code/tmp
-      - /code/log
-
     ports:
       - "3000:3000"
     environment:
@@ -44,7 +41,7 @@ services:
       MYSQL_NAME_DEV: ${MYSQL_NAME_DEV}
       MYSQL_NAME_TEST: ${MYSQL_NAME_TEST}
     depends_on:
-      - db
+      - dev-db
       - test-db
     tty: true
     restart: always
