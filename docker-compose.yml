@@ -1,47 +1,15 @@
 version: '3'
 services:
-  dev-db:
-    build:
-      context: ./mysql
-      dockerfile: Dockerfile
-    volumes:
-      - ./mysql/dev-data:/var/lib/mysql:cached
-    ports:
-      - "3306:3306"
-    environment:
-      MYSQL_DATABASE: ${MYSQL_NAME_DEV}
-
-  test-db:
-    build:
-      context: ./mysql
-      dockerfile: Dockerfile
-    volumes:
-      - ./mysql/test-data:/var/lib/mysql:cached
-    ports:
-      - "3307:3306"
-    environment:
-      MYSQL_DATABASE: ${MYSQL_NAME_TEST}
-
   app:
     build:
       context: ./code
       dockerfile: Dockerfile
     volumes:
       - ./code:/var/www:cached
-      # - ./bundle:/usr/local/bundle:cached コメントアウトすると高速化する(docker詳しい人向け)
       - ./bundle:/usr/local/bundle:cached
     ports:
       - "3000:3000"
     environment:
       RAILS_ENV: development
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      MYSQL_HOST_DEV: ${MYSQL_HOST_DEV}
-      MYSQL_HOST_TEST: ${MYSQL_HOST_TEST}
-      MYSQL_NAME_DEV: ${MYSQL_NAME_DEV}
-      MYSQL_NAME_TEST: ${MYSQL_NAME_TEST}
-    depends_on:
-      - dev-db
-      - test-db
     tty: true
     restart: always
